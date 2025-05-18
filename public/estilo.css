@@ -1,0 +1,26 @@
+body {
+    /* Configuração básica obrigatória */
+    background-image: url('fundo-colete.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+    /* Remove TODOS os efeitos de transparência */
+    background-color: #000000 !important; /* Fundo preto sólido como fallback */
+    
+    /* Remove qualquer overlay ou filtro */
+    &::before, &::after {
+        display: none !important;
+    }
+    
+    /* Garante que a imagem seja a camada mais baixa */
+    z-index: 0;
+    position: relative;
+}
+
+/* Container principal - ajuste conforme necessidade */
+.container {
+    background-color: rgba(0, 0, 0, 0.7); /* Só o conteúdo terá transparência */
+    backdrop-filter: none;
+}

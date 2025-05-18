@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Produção de Colete</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: Arial, sans-serif;
+            color: #0aff0a;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            
+            /* Configuração do plano de fundo */
+            background-image: url('fundo-colete.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            
+            /* Fallback */
+            background-color: #0a0a0a;
+        }
+
+        /* Overlay escuro */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 10, 0.85);
+            z-index: -1;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: rgba(17, 17, 17, 0.92);
+            padding: 25px;
+            border: 2px solid #0aff0a;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(10, 255, 10, 0.3);
+            position: relative;
+        }
+
+        /* Cabeçalhos */
+        h1, h2 {
+            color: #0aff0a;
+            text-align: center;
+            border-bottom: 1px solid #0aff0a;
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-shadow: 0 0 5px rgba(10, 255, 10, 0.5);
+        }
+
+        /* Menu de botões */
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .menu-btn {
+            background-color: rgba(10, 10, 10, 0.7);
+            color: #0aff0a;
+            border: 2px solid #0aff0a;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .menu-btn:hover {
+            background-color: #0aff0a;
+            color: #0a0a0a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(10, 255, 10, 0.4);
+        }
+
+        /* Formulários */
+        .form-container {
+            background-color: rgba(10, 10, 10, 0.8);
+            padding: 20px;
+            border: 1px solid #0aff0a;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            background-color: rgba(17, 17, 17, 0.9);
+            color: #0aff0a;
+            border: 1px solid #0aff0a;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0aff0a;
+            box-shadow: 0 0 8px rgba(10, 255, 10, 0.5);
+        }
+
+        button[type="submit"] {
+            background-color: #0aff0a;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0a0a0a;
+            color: #0aff0a;
+            border: 1px solid #0aff0a;
+            transform: translateY(-2px);
+        }
+
+        /* Resultados */
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #0aff0a;
+            border-radius: 5px;
+            background-color: rgba(10, 10, 10, 0.8);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Opções de preço */
+        .price-option {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .price-option input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        /* Esconder elementos */
+        .hidden {
+            display: none;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #0aff0a;
+            font-size: 14px;
+            padding: 10px;
+            border-top: 1px solid #0aff0a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CADEIA COMPLETA DE PRODUÇÃO DE COLETES</h1>
+        <h2>Calculadora</h2>
+        
+        <div class="menu">
+            <button class="menu-btn" onclick="showForm('form-calcular-coletes')">1 - Calcular recursos para fabricar coletes</button>
+            <button class="menu-btn" onclick="showForm('form-calcular-kevlars')">2 - Kevlars p/ fabricar coletes</button>
+            <button class="menu-btn" onclick="showForm('form-calcular-acos')">3 - Acos p/ fabricar coletes</button>
+            <button class="menu-btn" onclick="showForm('form-fabricar-kevlars')">4 - Fabricar Kevlars</button>
+            <button class="menu-btn" onclick="showForm('form-tecidos-para-kevlars')">5 - Tecidos p/ fabricar Kevlars </button>
+            <button class="menu-btn" onclick="showForm('form-valor-coletes')">6 - Vender coletes</button>
+            <button class="menu-btn" onclick="showForm('form-dinheiro-para-coletes')">7 - Comprar coletes</button>
+        </div>
+        
+        <!-- Formulário 1: Calcular recursos para coletes -->
+        <div id="form-calcular-coletes" class="form-container hidden">
+            <h2>RECURSOS PARA PRODUZIR COLETES</h2>
+            <form onsubmit="calcularRecursos(event)">
+                <div class="form-group">
+                    <label for="qtd-coletes">Quantos coletes deseja fabricar?</label>
+                    <input type="number" id="qtd-coletes" required min="1">
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-calcular-coletes" class="result hidden"></div>
+        </div>
+        
+        <!-- Formulário 2: Calcular coletes com Kevlars -->
+        <div id="form-calcular-kevlars" class="form-container hidden">
+            <h2>COLETES POSSÍVEIS COM KEVLARS</h2>
+            <form onsubmit="calcularComKevlars(event)">
+                <div class="form-group">
+                    <label for="qtd-kevlars">Quantos Kevlars você possui?</label>
+                    <input type="number" id="qtd-kevlars" required min="1">
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-calcular-kevlars" class="result hidden"></div>
+        </div>
+        
+        <!-- Formulário 3: Calcular coletes com Acos -->
+        <div id="form-calcular-acos" class="form-container hidden">
+            <h2>COLETES POSSÍVEIS COM ACOS</h2>
+            <form onsubmit="calcularComAcos(event)">
+                <div class="form-group">
+                    <label for="qtd-acos">Quantos Acos você possui?</label>
+                    <input type="number" id="qtd-acos" required min="1">
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-calcular-acos" class="result hidden"></div>
+        </div>
+        
+        <!-- Formulário 4: Fabricar Kevlars -->
+        <div id="form-fabricar-kevlars" class="form-container hidden">
+            <h2>FABRICAR KEVLARS</h2>
+            <form onsubmit="fabricarKevlars(event)">
+                <div class="form-group">
+                    <label for="qtd-fabricar-kevlars">Quantos Kevlars deseja fabricar?</label>
+                    <input type="number" id="qtd-fabricar-kevlars" required min="1">
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-fabricar-kevlars" class="result hidden"></div>
+        </div>
+        
+        <!-- Formulário 5: Kevlars com Tecidos -->
+        <div id="form-tecidos-para-kevlars" class="form-container hidden">
+            <h2>KEVLARS POSSÍVEIS COM TECIDOS</h2>
+            <form onsubmit="calcularKevlarsComTecidos(event)">
+                <div class="form-group">
+                    <label for="qtd-tecidos">Quantos Tecidos você possui?</label>
+                    <input type="number" id="qtd-tecidos" required min="1">
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-tecidos-para-kevlars" class="result hidden"></div>
+        </div>
+        
+        <!-- Formulário 6: Valor dos coletes -->
+        <div id="form-valor-coletes" class="form-container hidden">
+            <h2>VALOR TOTAL DOS COLETES</h2>
+            <form onsubmit="calcularValorColetes(event)">
+                <div class="form-group">
+                    <label for="qtd-valor-coletes">Quantos coletes deseja calcular?</label>
+                    <input type="number" id="qtd-valor-coletes" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Valor por colete:</label>
+                    <div class="price-option">
+                        <input type="radio" id="preco30k" name="preco-colete" value="30000" checked>
+                        <label for="preco30k">R$30.000</label>
+                    </div>
+                    <div class="price-option">
+                        <input type="radio" id="preco25k" name="preco-colete" value="25500">
+                        <label for="preco25k">R$25.500</label>
+                    </div>
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-valor-coletes" class="result hidden"></div>
+        </div>
+        
+        <!-- Formulário 7: Coletes com dinheiro -->
+        <div id="form-dinheiro-para-coletes" class="form-container hidden">
+            <h2>COLETES POSSÍVEIS COM DINHEIRO</h2>
+            <form onsubmit="calcularColetesComDinheiro(event)">
+                <div class="form-group">
+                    <label for="valor-dinheiro">Quanto dinheiro você possui?</label>
+                    <input type="number" id="valor-dinheiro" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Valor por colete:</label>
+                    <div class="price-option">
+                        <input type="radio" id="preco30k-2" name="preco-colete-2" value="30000" checked>
+                        <label for="preco30k-2">R$30.000</label>
+                    </div>
+                    <div class="price-option">
+                        <input type="radio" id="preco25k-2" name="preco-colete-2" value="25500">
+                        <label for="preco25k-2">R$25.500</label>
+                    </div>
+                </div>
+                <button type="submit">Calcular</button>
+            </form>
+            <div id="result-dinheiro-para-coletes" class="result hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar formulário selecionado
+        function showForm(formId) {
+            // Esconder todos os formulários
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.add('hidden');
+            });
+            
+            // Esconder todos os resultados
+            document.querySelectorAll('.result').forEach(result => {
+                result.classList.add('hidden');
+            });
+            
+            // Mostrar formulário selecionado
+            document.getElementById(formId).classList.remove('hidden');
+        }
+
+        // Funções de cálculo
+        function calcularRecursos(e) {
+            e.preventDefault();
+            const qtd = parseInt(document.getElementById('qtd-coletes').value);
+            const kevlars = qtd * 3;
+            const acos = qtd * 1;
+            const tecidos = kevlars * 20;
+            const acosAdicionais = kevlars * 30;
+            
+            const result = `
+                <h3>Para produzir ${qtd} coletes você precisa de:</h3>
+                <p><strong>${kevlars} Kevlars</strong></p>
+                <p><strong>${acos} Acos</strong></p>
+                <h4>Se precisar fabricar os Kevlars:</h4>
+                <p><strong>${tecidos} Tecidos</strong></p>
+                <p><strong>${acosAdicionais} Acos adicionais</strong></p>
+            `;
+            
+            document.getElementById('result-calcular-coletes').innerHTML = result;
+            document.getElementById('result-calcular-coletes').classList.remove('hidden');
+        }
+
+        function calcularComKevlars(e) {
+            e.preventDefault();
+            const qtd = parseInt(document.getElementById('qtd-kevlars').value);
+            const coletes = Math.floor(qtd / 3);
+            const acos = coletes * 1;
+            
+            const result = `
+                <h3>Com ${qtd} Kevlars você pode produzir:</h3>
+                <p><strong>${coletes} coletes</strong></p>
+                <p>Precisará de <strong>${acos} Acos</strong></p>
+            `;
+            
+            document.getElementById('result-calcular-kevlars').innerHTML = result;
+            document.getElementById('result-calcular-kevlars').classList.remove('hidden');
+        }
+
+        function calcularComAcos(e) {
+            e.preventDefault();
+            const qtd = parseInt(document.getElementById('qtd-acos').value);
+            const coletes = Math.floor(qtd / 1);
+            const kevlars = coletes * 3;
+            const tecidos = kevlars * 20;
+            const acosKevlar = kevlars * 30;
+            
+            const result = `
+                <h3>Com ${qtd} Acos você pode produzir:</h3>
+                <p><strong>${coletes} coletes</strong></p>
+                <p>Precisará de <strong>${kevlars} Kevlars</strong></p>
+                <p>Que consomem:</p>
+                <p><strong>${tecidos} Tecidos + ${acosKevlar} Acos</strong></p>
+            `;
+            
+            document.getElementById('result-calcular-acos').innerHTML = result;
+            document.getElementById('result-calcular-acos').classList.remove('hidden');
+        }
+
+        function fabricarKevlars(e) {
+            e.preventDefault();
+            const qtd = parseInt(document.getElementById('qtd-fabricar-kevlars').value);
+            const tecidos = qtd * 20;
+            const acos = qtd * 30;
+            
+            const result = `
+                <h3>Para fabricar ${qtd} Kevlars você precisa de:</h3>
+                <p><strong>${tecidos} Tecidos</strong></p>
+                <p><strong>${acos} Acos</strong></p>
+            `;
+            
+            document.getElementById('result-fabricar-kevlars').innerHTML = result;
+            document.getElementById('result-fabricar-kevlars').classList.remove('hidden');
+        }
+
+        function calcularKevlarsComTecidos(e) {
+            e.preventDefault();
+            const qtd = parseInt(document.getElementById('qtd-tecidos').value);
+            const kevlars = Math.floor(qtd / 20);
+            const acos = kevlars * 30;
+            const sobra = qtd % 20;
+            
+            const result = `
+                <h3>Com ${qtd} Tecidos você pode fabricar:</h3>
+                <p><strong>${kevlars} Kevlars</strong></p>
+                <p>Precisará de <strong>${acos} Acos adicionais</strong></p>
+                <p>Sobrarão <strong>${sobra} Tecidos</strong> não utilizados</p>
+            `;
+            
+            document.getElementById('result-tecidos-para-kevlars').innerHTML = result;
+            document.getElementById('result-tecidos-para-kevlars').classList.remove('hidden');
+        }
+
+        function calcularValorColetes(e) {
+            e.preventDefault();
+            const qtd = parseInt(document.getElementById('qtd-valor-coletes').value);
+            const preco = parseInt(document.querySelector('input[name="preco-colete"]:checked').value);
+            const total = qtd * preco;
+            
+            const result = `
+                <h3>Valor para ${qtd} coletes:</h3>
+                <p><strong>R$${total.toLocaleString('pt-BR')}</strong></p>
+                <p>(${qtd} × R$${preco.toLocaleString('pt-BR')})</p>
+            `;
+            
+            document.getElementById('result-valor-coletes').innerHTML = result;
+            document.getElementById('result-valor-coletes').classList.remove('hidden');
+        }
+
+        function calcularColetesComDinheiro(e) {
+            e.preventDefault();
+            const valor = parseInt(document.getElementById('valor-dinheiro').value);
+            const preco = parseInt(document.querySelector('input[name="preco-colete-2"]:checked').value);
+            const coletes = Math.floor(valor / preco);
+            const troco = valor % preco;
+            
+            const result = `
+                <h3>Com R$${valor.toLocaleString('pt-BR')} você pode comprar:</h3>
+                <p><strong>${coletes} coletes</strong> (R$${preco.toLocaleString('pt-BR')} cada)</p>
+                <p>Sobrarão <strong>R$${troco.toLocaleString('pt-BR')}</strong></p>
+            `;
+            
+            document.getElementById('result-dinheiro-para-coletes').innerHTML = result;
+            document.getElementById('result-dinheiro-para-coletes').classList.remove('hidden');
+        }
+
+        // Mostrar primeiro formulário ao carregar
+        window.onload = function() {
+            showForm('form-calcular-coletes');
+        };
+
+        //Bay Helton
+    </script>
+</body>
+</html>
